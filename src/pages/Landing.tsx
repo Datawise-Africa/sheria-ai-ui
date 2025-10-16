@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Search, 
   MessageSquare, 
@@ -20,10 +20,20 @@ import {
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
+import { useIsAuthenticated } from '../stores/authStore';
 
 const Landing: React.FC = () => {
+  const navigate = useNavigate();
+  const isAuthenticated = useIsAuthenticated();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
+
+  // Redirect authenticated users to chat
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/chat');
+    }
+  }, [isAuthenticated, navigate]);
 
   // Auto-rotate testimonials
   useEffect(() => {
@@ -60,16 +70,19 @@ const Landing: React.FC = () => {
 
             {/* Desktop CTA Buttons */}
             <div className="hidden md:flex items-center space-x-4">
-              <Link to="/chat">
-                <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent">
-                  Sign In
-                </Button>
-              </Link>
-              <Link to="/search">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                  Start Free Trial
-                </Button>
-              </Link>
+              <Button
+                variant="ghost"
+                onClick={() => navigate('/login')}
+                className="text-muted-foreground hover:text-foreground hover:bg-accent"
+              >
+                Sign In
+              </Button>
+              <Button
+                onClick={() => navigate('/register')}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                Start Free Trial
+              </Button>
             </div>
 
             {/* Mobile Menu Button */}
@@ -93,16 +106,19 @@ const Landing: React.FC = () => {
               <a href="#testimonials" className="block text-muted-foreground hover:text-foreground transition-colors">Testimonials</a>
               <a href="#contact" className="block text-muted-foreground hover:text-foreground transition-colors">Contact</a>
               <div className="pt-4 space-y-3">
-                <Link to="/chat" className="w-full">
-                  <Button variant="ghost" className="w-full text-muted-foreground hover:text-foreground hover:bg-accent">
-                    Sign In
-                  </Button>
-                </Link>
-                <Link to="/search" className="w-full">
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                    Start Free Trial
-                  </Button>
-                </Link>
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate('/login')}
+                  className="w-full text-muted-foreground hover:text-foreground hover:bg-accent"
+                >
+                  Sign In
+                </Button>
+                <Button
+                  onClick={() => navigate('/register')}
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
+                  Start Free Trial
+                </Button>
               </div>
             </div>
           </div>
@@ -129,12 +145,14 @@ const Landing: React.FC = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/search">
-                  <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-4">
-                    Start Free Trial
-                    <ChevronRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
+                <Button
+                  size="lg"
+                  onClick={() => navigate('/register')}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-4"
+                >
+                  Start Free Trial
+                  <ChevronRight className="ml-2 h-5 w-5" />
+                </Button>
                 <Button size="lg" variant="outline" className="border-border text-muted-foreground hover:bg-accent hover:text-foreground text-lg px-8 py-4">
                   <Play className="mr-2 h-5 w-5" />
                   Watch 60-sec Demo
@@ -305,11 +323,12 @@ const Landing: React.FC = () => {
               </div>
               <h3 className="text-2xl font-semibold mb-4">Real data, real citations</h3>
               <p className="text-muted-foreground mb-6">Watch how SheriaAI processes your questions and returns accurate, cited answers from Kenyan case law.</p>
-              <Link to="/search">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                  Try Search Tool
-                </Button>
-              </Link>
+              <Button
+                onClick={() => navigate('/register')}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                Try Search Tool
+              </Button>
             </div>
           </div>
         </div>
@@ -555,9 +574,12 @@ const Landing: React.FC = () => {
                       : 'bg-muted hover:bg-muted-foreground text-foreground'
                   }`}>
                     {plan.cta === 'Start Free Trial' ? (
-                      <Link to="/search" className="w-full">
+                      <Button
+                        onClick={() => navigate('/register')}
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                      >
                         {plan.cta}
-                      </Link>
+                      </Button>
                     ) : (
                       plan.cta
                     )}
@@ -687,8 +709,8 @@ const Landing: React.FC = () => {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><a href="#features" className="hover:text-foreground transition-colors">Features</a></li>
                 <li><a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a></li>
-                <li><Link to="/search" className="hover:text-foreground transition-colors">Search Tool</Link></li>
-                <li><Link to="/chat" className="hover:text-foreground transition-colors">AI Chat</Link></li>
+                <li><Button variant="link" onClick={() => navigate('/register')} className="p-0 h-auto text-muted-foreground hover:text-foreground">Search Tool</Button></li>
+                <li><Button variant="link" onClick={() => navigate('/register')} className="p-0 h-auto text-muted-foreground hover:text-foreground">AI Chat</Button></li>
               </ul>
             </div>
 
@@ -698,7 +720,7 @@ const Landing: React.FC = () => {
                 <li><a href="#how-it-works" className="hover:text-foreground transition-colors">How it Works</a></li>
                 <li><a href="#testimonials" className="hover:text-foreground transition-colors">Testimonials</a></li>
                 <li><a href="#contact" className="hover:text-foreground transition-colors">Contact</a></li>
-                <li><Link to="/chat" className="hover:text-foreground transition-colors">Get Started</Link></li>
+                <li><Button variant="link" onClick={() => navigate('/register')} className="p-0 h-auto text-muted-foreground hover:text-foreground">Get Started</Button></li>
               </ul>
             </div>
 
@@ -708,7 +730,7 @@ const Landing: React.FC = () => {
                 <li><a href="#contact" className="hover:text-foreground transition-colors">About</a></li>
                 <li><a href="#pricing" className="hover:text-foreground transition-colors">Plans</a></li>
                 <li><a href="mailto:hello@sheriaai.co.ke" className="hover:text-foreground transition-colors">Contact</a></li>
-                <li><Link to="/search" className="hover:text-foreground transition-colors">Demo</Link></li>
+                <li><Button variant="link" onClick={() => navigate('/register')} className="p-0 h-auto text-muted-foreground hover:text-foreground">Demo</Button></li>
               </ul>
             </div>
           </div>
