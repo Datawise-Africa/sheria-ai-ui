@@ -1,4 +1,3 @@
-import React from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Chatbot from './pages/Chatbot';
 import Landing from './pages/Landing';
